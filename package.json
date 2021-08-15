@@ -1,5 +1,5 @@
 {
-  "name": "test-urql",
+  "name": "next-urql-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@urql/core": "^2.2.0",
+    "@urql/exchange-graphcache": "^4.2.1",
+    "apollo-server-micro": "2.25",
+    "graphql": "^15.5.1",
+    "micro": "^9.3.4",
     "next": "11.1.0",
+    "next-urql": "^3.2.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-is": "^17.0.2",
+    "urql": "^2.0.4",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "7.32.0",
