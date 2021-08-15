@@ -8,25 +8,7 @@ import { cacheExchange } from "@urql/exchange-graphcache";
 import ProductsSaleProvider from "../components/context/ProductsSaleProvider";
 import { gql } from "@urql/core";
 
-const Home = () => {
-  return (
-    <ProductsSaleProvider>
-      <div className="grid">
-        <Products />
-        <Sales />
-        <CreateProduct />
-      </div>
-    </ProductsSaleProvider>
-  );
-};
-
-export const getServerSideProps = async () => {
-  const ssrCache = ssrExchange({ isClient: false });
-  const client = initUrqlClient({
-    url: "http://localhost:3000/api/graphql",
-    exchanges: [
-      dedupExchange,
-      cacheExchange({
+const cache = cacheExchange({
         updates: {
           Mutation: {
             createProduct(result, args, cache, info) {
@@ -60,8 +42,27 @@ export const getServerSideProps = async () => {
             },
           },
         },
-      }),
-      ,
+      });
+
+const Home = () => {
+  return (
+    <ProductsSaleProvider>
+      <div className="grid">
+        <Products />
+        <Sales />
+        <CreateProduct />
+      </div>
+    </ProductsSaleProvider>
+  );
+};
+
+export const getServerSideProps = async () => {
+  const ssrCache = ssrExchange({ isClient: false });
+  const client = initUrqlClient({
+    url: "http://localhost:3000/api/graphql",
+    exchanges: [
+      dedupExchange,
+      cache,
       ssrCache,
       fetchExchange,
     ],
@@ -73,9 +74,15 @@ export const getServerSideProps = async () => {
 };
 
 export default withUrqlClient(
-  (_ssrExchange, ctx) => ({
+  (ssrCache, ctx) => ({
     // ...add your Client options here
     url: "http://localhost:3000/api/graphql",
+    exchanges: [
+      dedupExchange,
+      cache,
+      ssrCache,
+      fetchExchange,
+    ]
   }),
   { ssr: false }
 )(Home);
