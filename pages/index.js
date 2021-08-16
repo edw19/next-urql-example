@@ -9,40 +9,38 @@ import ProductsSaleProvider from "../components/context/ProductsSaleProvider";
 import { gql } from "@urql/core";
 
 const cache = cacheExchange({
-        updates: {
-          Mutation: {
-            createProduct(result, args, cache, info) {
-              console.log("THIS CODE RUN");
-              cache.updateQuery({query: ''})
-              cache.updateQuery(
-                {
-                  query: gql`
-                    query getProducts {
-                      getProducts {
-                        id
-                        name
-                        stock
-                      }
-                    }
-                  `,
-                },
-                (data) => {
-                  console.log(result.createProduct);
-                  data.getProducts.push(result.createProduct);
-                  return data;
+  updates: {
+    Mutation: {
+      createProduct(result, args, cache, info) {
+        cache.updateQuery(
+          {
+            query: gql`
+              query getProducts {
+                getProducts {
+                  id
+                  name
+                  stock
                 }
-              );
-              // const products = cache.resolve("Query", "getProducts");
-              // if (Array.isArray(products)) {
-              //   if (result.product) {
-              //     products.push(result.createProduct);
-              //     cache.updateQuery("Query", "getProducts", products);
-              //   }
-              // }
-            },
+              }
+            `,
           },
-        },
-      });
+          (data) => {
+            console.log(result.createProduct);
+            data.getProducts.push(result.createProduct);
+            return data;
+          }
+        );
+        // const products = cache.resolve("Query", "getProducts");
+        // if (Array.isArray(products)) {
+        //   if (result.product) {
+        //     products.push(result.createProduct);
+        //     cache.updateQuery("Query", "getProducts", products);
+        //   }
+        // }
+      },
+    },
+  },
+});
 
 const Home = () => {
   return (
@@ -60,12 +58,7 @@ export const getServerSideProps = async () => {
   const ssrCache = ssrExchange({ isClient: false });
   const client = initUrqlClient({
     url: "http://localhost:3000/api/graphql",
-    exchanges: [
-      dedupExchange,
-      cache,
-      ssrCache,
-      fetchExchange,
-    ],
+    exchanges: [dedupExchange, cache, ssrCache, fetchExchange],
   });
 
   await client.query(GET_PRODUCTS).toPromise();
@@ -77,12 +70,7 @@ export default withUrqlClient(
   (ssrCache, ctx) => ({
     // ...add your Client options here
     url: "http://localhost:3000/api/graphql",
-    exchanges: [
-      dedupExchange,
-      cache,
-      ssrCache,
-      fetchExchange,
-    ]
+    exchanges: [dedupExchange, cache, ssrCache, fetchExchange],
   }),
   { ssr: false }
 )(Home);

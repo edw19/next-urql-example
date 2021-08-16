@@ -13,8 +13,9 @@ const CREATE_PRODUCT = `
 export const useCreateProduct = () => {
   const [{ fetching, error }, executeMutation] = useMutation(CREATE_PRODUCT);
 
-  const createProduct = async (product) => {
-    await executeMutation({ product });
+  console.log(error)
+  const createProduct = (product) => {
+      executeMutation({ product });
   };
 
   return { createProduct, loading: fetching, error };

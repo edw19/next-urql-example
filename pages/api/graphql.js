@@ -43,12 +43,13 @@ const resolvers = {
     createProduct: (_, { product }) => {
       product.id = v4();
       products.push(product);
-      // throw new Error("product is registed")
+      let productDuplicated = true;
+
+      if (productDuplicated) {
+        throw new Error("product is registed");
+      }
       return product;
     },
-    // createSale: (_, args) => {
-
-    // }
   },
 };
 

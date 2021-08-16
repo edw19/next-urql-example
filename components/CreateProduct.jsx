@@ -12,13 +12,19 @@ function CreateProduct() {
     setProduct({ ...product, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     // e.stopPropagation();
     if (!product.name || !product.stock) {
       return alert("ingres un nuevo producto");
     }
-    await createProduct(product);
+
+    try {
+      createProduct(product);
+      // clear form
+    } catch (error) {
+      // catch the error
+    }
   };
 
   return (

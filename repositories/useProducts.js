@@ -17,7 +17,7 @@ export const useProducts = () => {
   });
 
   const refresh = () => {
-    // reexecuteQuery({ requestPolicy: "network-only" });
+    reexecuteQuery({ requestPolicy: "network-only" });
   };
 
   return {
